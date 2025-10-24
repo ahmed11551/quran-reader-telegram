@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { SimpleAudioPlayer } from './components/SimpleAudioPlayer';
+import { AdvancedAudioPlayer } from './components/AdvancedAudioPlayer';
 import { IslamGlobalQuranText } from './components/IslamGlobalQuranText';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
@@ -91,8 +91,8 @@ function App() {
           {/* Quran Text */}
           <IslamGlobalQuranText />
 
-          {/* Simple Audio Player */}
-          <SimpleAudioPlayer />
+          {/* Advanced Audio Player */}
+          <AdvancedAudioPlayer />
         </div>
 
         {/* Settings Panel */}
