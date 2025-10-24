@@ -19,20 +19,30 @@ export const SimpleAudioPlayer: React.FC = () => {
 
   const currentReciter = reciters.find(r => r.id === settings.selectedReciter);
 
-  // Простые URL для тестирования
+  // Простые URL для тестирования с несколькими источниками
   const getAudioUrl = () => {
     const surahNumber = currentSurah.toString().padStart(3, '0');
     
-    // Используем простые URL
-    const urls = {
-      abdul_basit: `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`,
-      mishary_rashid: `https://server8.mp3quran.net/mishary_rashid/${surahNumber}.mp3`,
-      saad_al_ghamdi: `https://server8.mp3quran.net/saad_ghamdi/${surahNumber}.mp3`,
-      maher_al_muaiqly: `https://server8.mp3quran.net/maher_muaiqly/${surahNumber}.mp3`,
-      sudais_shuraim: `https://server8.mp3quran.net/sudais/${surahNumber}.mp3`
-    };
+    // Используем несколько источников для надежности
+    const sources = [
+      `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`,
+      `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`,
+      `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`
+    ];
     
-    return urls[currentReciter?.id as keyof typeof urls] || urls.abdul_basit;
+    return sources[0]; // Возвращаем основной источник
+  };
+
+  const getAlternativeUrl = (currentUrl: string) => {
+    const surahNumber = currentSurah.toString().padStart(3, '0');
+    
+    if (currentUrl.includes('server8.mp3quran.net')) {
+      return `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`;
+    } else if (currentUrl.includes('everyayah.com')) {
+      return `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`;
+    } else {
+      return `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`;
+    }
   };
 
   const togglePlayPause = async () => {
@@ -104,9 +114,20 @@ export const SimpleAudioPlayer: React.FC = () => {
       setError(null);
     };
     const handleError = () => {
-      setError('Ошибка загрузки аудио');
-      setIsLoading(false);
-      setIsPlaying(false);
+      console.error('Audio error occurred');
+      const currentUrl = audio.src;
+      const alternativeUrl = getAlternativeUrl(currentUrl);
+      
+      if (alternativeUrl !== currentUrl) {
+        console.log('Trying alternative URL:', alternativeUrl);
+        audio.src = alternativeUrl;
+        audio.load();
+        setError(null);
+      } else {
+        setError('Ошибка загрузки аудио');
+        setIsLoading(false);
+        setIsPlaying(false);
+      }
     };
     const handleEnded = () => setIsPlaying(false);
 
@@ -161,17 +182,34 @@ export const SimpleAudioPlayer: React.FC = () => {
       {error && (
         <div className="bg-red-50 border border-red-200 rounded-lg p-3 mb-4">
           <p className="text-red-800 text-sm">{error}</p>
-          <button
-            onClick={() => {
-              setError(null);
-              if (audioRef.current) {
-                audioRef.current.load();
-              }
-            }}
-            className="mt-2 px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
-          >
-            Попробовать снова
-          </button>
+          <div className="mt-3 space-x-2">
+            <button
+              onClick={() => {
+                setError(null);
+                if (audioRef.current) {
+                  audioRef.current.load();
+                }
+              }}
+              className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
+            >
+              Попробовать снова
+            </button>
+            <button
+              onClick={() => {
+                // Переключиться на другой источник
+                if (audioRef.current) {
+                  const currentUrl = audioRef.current.src;
+                  const alternativeUrl = getAlternativeUrl(currentUrl);
+                  audioRef.current.src = alternativeUrl;
+                  audioRef.current.load();
+                  setError(null);
+                }
+              }}
+              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 transition-colors"
+            >
+              Другой источник
+            </button>
+          </div>
         </div>
       )}
 
