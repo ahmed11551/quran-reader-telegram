@@ -4,7 +4,6 @@ import { IslamGlobalQuranText } from './components/IslamGlobalQuranText';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
-import { TestAudioPlayer } from './components/TestAudioPlayer';
 import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
 import { useTelegramWebApp } from './hooks/useTelegramWebApp';
@@ -91,9 +90,6 @@ function App() {
 
           {/* Quran Text */}
           <IslamGlobalQuranText />
-
-          {/* Test Audio Player */}
-          <TestAudioPlayer />
 
           {/* Simple Audio Player */}
           <SimpleAudioPlayer />
