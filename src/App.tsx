@@ -3,7 +3,7 @@ import { ResponsiveHeader } from './components/ResponsiveUI';
 import { WorkingQuickActions } from './components/WorkingQuickActions';
 import { RealStatsCard } from './components/RealStatsCard';
 import { FullQuranText } from './components/FullQuranText';
-import { WorkingAudioPlayer } from './components/WorkingAudioPlayer';
+import { FixedAudioPlayer } from './components/FixedAudioPlayer';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
@@ -73,8 +73,8 @@ function App() {
             {/* Full Quran Text */}
             <FullQuranText />
 
-            {/* Working Audio Player */}
-            <WorkingAudioPlayer />
+            {/* Fixed Audio Player */}
+            <FixedAudioPlayer />
           </div>
 
           {/* Sidebar */}

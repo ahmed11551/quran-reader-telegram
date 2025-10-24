@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { BookOpen, Volume2, Eye, EyeOff, ChevronDown, ChevronUp, Play } from 'lucide-react';
+import { BookOpen, Volume2, ChevronDown, ChevronUp } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 import { fullQuranData } from '../data/fullQuranDatabase';
+import { EnhancedWordByWord } from './EnhancedWordByWord';
 
 export const FullQuranText: React.FC = () => {
   const { currentSurah, currentAyah } = useAppStore();
-  const [showWordByWord, setShowWordByWord] = useState(false);
   const [expandedTafsir, setExpandedTafsir] = useState(false);
   
   const currentSurahData = fullQuranData.find(s => s.id === currentSurah);
@@ -152,77 +152,9 @@ export const FullQuranText: React.FC = () => {
           </div>
         </motion.div>
 
-        {/* Word by Word */}
-        <AnimatePresence>
-          {showWordByWord && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: 'auto' }}
-              exit={{ opacity: 0, height: 0 }}
-              className="mt-4 md:mt-6"
-            >
-              <div className="bg-gray-50 rounded-xl md:rounded-xl p-4 md:p-6">
-                <h3 className="text-base md:text-lg font-semibold text-gray-900 mb-3 md:mb-4 flex items-center">
-                  <Eye className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-                  Слово за словом
-                </h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4">
-                  {currentAyahData.words.map((word, index) => (
-                    <motion.div
-                      key={word.id}
-                      initial={{ opacity: 0, scale: 0.8 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      transition={{ delay: index * 0.05 }}
-                      className="bg-white rounded-lg md:rounded-lg p-3 md:p-4 shadow-sm hover:shadow-md transition-shadow"
-                    >
-                      <div className="text-right text-lg md:text-xl font-amiri text-gray-900 mb-2" dir="rtl">
-                        {word.text}
-                      </div>
-                      <div className="text-xs md:text-sm text-gray-600 mb-1">
-                        <strong>Перевод:</strong> {word.translation}
-                      </div>
-                      <div className="text-xs md:text-sm text-gray-500 mb-2">
-                        <strong>Транслитерация:</strong> {word.transliteration}
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="text-xs text-gray-400 bg-gray-100 rounded px-2 py-1">
-                          {word.startTime.toFixed(1)}s - {word.endTime.toFixed(1)}s
-                        </div>
-                        <button
-                          onClick={() => {
-                            // Здесь можно добавить воспроизведение конкретного слова
-                            console.log(`Playing word: ${word.text}`);
-                          }}
-                          className="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600 transition-colors"
-                        >
-                          <Play className="w-3 h-3" />
-                        </button>
-                      </div>
-                    </motion.div>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Toggle Word by Word */}
-        <div className="flex justify-center mt-4 md:mt-6">
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => setShowWordByWord(!showWordByWord)}
-            className="flex items-center space-x-2 px-4 md:px-6 py-2 md:py-3 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors"
-          >
-            {showWordByWord ? (
-              <EyeOff className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
-            ) : (
-              <Eye className="w-4 h-4 md:w-5 md:h-5 text-gray-600" />
-            )}
-            <span className="text-gray-700 font-medium text-sm md:text-base">
-              {showWordByWord ? 'Скрыть слова' : 'Показать слова'}
-            </span>
-          </motion.button>
+        {/* Enhanced Word by Word Component */}
+        <div className="mt-4 md:mt-6">
+          <EnhancedWordByWord />
         </div>
 
         {/* Footer */}
