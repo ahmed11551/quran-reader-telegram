@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
-import { AdvancedAudioPlayer } from './components/AdvancedAudioPlayer';
-import { LocalQuranText } from './components/LocalQuranText';
+import { SimpleReliableAudioPlayer } from './components/SimpleReliableAudioPlayer';
+import { ModernHeader, QuickActions, ModernStatsCard } from './components/ModernUI';
+import { BeautifulQuranText } from './components/BeautifulQuranText';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
 import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
-import { useTelegramWebApp } from './hooks/useTelegramWebApp';
+// import { useTelegramWebApp } from './hooks/useTelegramWebApp';
 import { localSurahs, localReciters } from './data/localQuranData';
 
 function App() {
@@ -16,7 +17,7 @@ function App() {
     error 
   } = useAppStore();
 
-  const { user } = useTelegramWebApp();
+  // const { user } = useTelegramWebApp();
 
         // Load initial data
         useEffect(() => {
@@ -48,55 +49,42 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+      {/* Modern Header */}
+      <ModernHeader />
+      
       <div className="container mx-auto px-4 py-6 max-w-4xl">
-        {/* Header */}
-        <div className="text-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Читалка Корана
-          </h1>
-          <p className="text-gray-600">
-            Синхронизированное чтение с подсветкой слов
-          </p>
-          {user && (
-            <p className="text-sm text-gray-500 mt-2">
-              Добро пожаловать, {user.first_name}!
-            </p>
-          )}
-        </div>
+        {/* Quick Actions */}
+        <QuickActions />
+        
+        {/* Stats Card */}
+        <ModernStatsCard />
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Content */}
+          <div className="lg:col-span-2 space-y-6">
+            {/* Surah List */}
+            <SurahList />
 
-        {/* Main Content */}
-        <div className="space-y-6">
-          {/* Progress Tracker */}
-          <ProgressTracker />
-          
-          {/* Navigation Tabs */}
-          <div className="bg-white rounded-lg shadow-lg p-4">
-            <div className="flex space-x-4">
-              <button className="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium">
-                Суры
-              </button>
-              <button className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200">
-                Джузы
-              </button>
-            </div>
+            {/* Surah Navigator */}
+            <SurahNavigator />
+
+            {/* Beautiful Quran Text */}
+            <BeautifulQuranText />
+
+            {/* Simple Reliable Audio Player */}
+            <SimpleReliableAudioPlayer />
           </div>
-          
-          {/* Surah List */}
-          <SurahList />
 
-          {/* Surah Navigator */}
-          <SurahNavigator />
-
-          {/* Quran Text */}
-          <LocalQuranText />
-
-          {/* Advanced Audio Player */}
-          <AdvancedAudioPlayer />
+          {/* Sidebar */}
+          <div className="space-y-6">
+            {/* Settings Panel */}
+            <SettingsPanel />
+            
+            {/* Progress Tracker */}
+            <ProgressTracker />
+          </div>
         </div>
-
-        {/* Settings Panel */}
-        <SettingsPanel />
       </div>
     </div>
   );
