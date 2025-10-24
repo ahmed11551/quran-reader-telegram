@@ -1,14 +1,14 @@
 import { useEffect } from 'react';
-import { SimpleReliableAudioPlayer } from './components/SimpleReliableAudioPlayer';
-import { ModernHeader, QuickActions, ModernStatsCard } from './components/ModernUI';
+import { FunctionalQuickActions } from './components/FunctionalQuickActions';
+import { AdvancedAudioPlayer } from './components/AdvancedAudioPlayer';
+import { ModernHeader, ModernStatsCard } from './components/ModernUI';
 import { BeautifulQuranText } from './components/BeautifulQuranText';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
 import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
-// import { useTelegramWebApp } from './hooks/useTelegramWebApp';
-import { localSurahs, localReciters } from './data/localQuranData';
+import { completeQuranData, completeReciters } from './data/completeQuranDatabase';
 
 function App() {
   const { 
@@ -21,11 +21,11 @@ function App() {
 
         // Load initial data
         useEffect(() => {
-          console.log('Loading local Quran data...');
+          console.log('Loading complete Quran database...');
           try {
-            setSurahs(localSurahs);
-            setReciters(localReciters);
-            console.log('Local Quran data loaded successfully');
+            setSurahs(completeQuranData);
+            setReciters(completeReciters);
+            console.log('Complete Quran database loaded successfully');
           } catch (err) {
             console.error('Error loading Quran data:', err);
           }
@@ -55,7 +55,7 @@ function App() {
       
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Quick Actions */}
-        <QuickActions />
+        <FunctionalQuickActions />
         
         {/* Stats Card */}
         <ModernStatsCard />
@@ -72,8 +72,8 @@ function App() {
             {/* Beautiful Quran Text */}
             <BeautifulQuranText />
 
-            {/* Simple Reliable Audio Player */}
-            <SimpleReliableAudioPlayer />
+            {/* Advanced Audio Player */}
+            <AdvancedAudioPlayer />
           </div>
 
           {/* Sidebar */}
