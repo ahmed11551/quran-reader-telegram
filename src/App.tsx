@@ -8,6 +8,10 @@ import { ReciterSelector } from './components/ReciterSelector';
 import { NavigationPanel } from './components/NavigationPanel';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
+import { QuranSearch } from './components/QuranSearch';
+import { BookmarksAndNotes } from './components/BookmarksAndNotes';
+import { FontAndThemeSettings } from './components/FontAndThemeSettings';
+import { ShareAyah } from './components/ShareAyah';
 import { useAppStore } from './store/appStore';
 import { fullQuranData, fullReciters } from './data/fullQuranDatabase';
 
@@ -87,6 +91,12 @@ function App() {
           </div>
         </div>
       </div>
+      
+      {/* Floating Action Buttons */}
+      <QuranSearch />
+      <BookmarksAndNotes />
+      <FontAndThemeSettings />
+      <ShareAyah />
     </div>
   );
 }

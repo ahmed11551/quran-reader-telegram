@@ -29,11 +29,14 @@ const defaultSettings: UserSettings = {
   selectedTafsir: 'ibn_kathir',
   scriptVariant: 'uthmani',
   fontSize: 16,
+  fontFamily: 'amiri',
   theme: 'light',
   autoPlay: false,
   showTransliteration: true,
   showTranslation: true,
   showTafsir: false,
+  showWordByWord: false,
+  nightMode: false,
 };
 
 const defaultProgress: ReadingProgress = {

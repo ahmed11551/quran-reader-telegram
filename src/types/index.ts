@@ -55,11 +55,14 @@ export interface UserSettings {
   selectedTafsir: string;
   scriptVariant: 'indopak' | 'uthmani' | 'custom';
   fontSize: number;
-  theme: 'light' | 'dark';
+  fontFamily: string;
+  theme: 'light' | 'dark' | 'sepia' | 'green';
   autoPlay: boolean;
   showTransliteration: boolean;
   showTranslation: boolean;
   showTafsir: boolean;
+  showWordByWord: boolean;
+  nightMode: boolean;
 }
 
 export interface ReadingProgress {
