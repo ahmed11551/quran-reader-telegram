@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
-import { ResponsiveHeader, ResponsiveQuickActions, ResponsiveStatsCard } from './components/ResponsiveUI';
+import { ResponsiveHeader } from './components/ResponsiveUI';
+import { WorkingQuickActions } from './components/WorkingQuickActions';
+import { RealStatsCard } from './components/RealStatsCard';
 import { ResponsiveQuranText } from './components/ResponsiveQuranText';
-import { ReliableAudioPlayer } from './components/ReliableAudioPlayer';
+import { WorkingAudioPlayer } from './components/WorkingAudioPlayer';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
@@ -53,11 +55,11 @@ function App() {
       <ResponsiveHeader />
       
       <div className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-6xl">
-        {/* Responsive Quick Actions */}
-        <ResponsiveQuickActions />
+        {/* Working Quick Actions */}
+        <WorkingQuickActions />
         
-        {/* Responsive Stats Card */}
-        <ResponsiveStatsCard />
+        {/* Real Stats Card */}
+        <RealStatsCard />
         
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 md:gap-6">
           {/* Main Content */}
@@ -71,8 +73,8 @@ function App() {
             {/* Responsive Quran Text */}
             <ResponsiveQuranText />
 
-            {/* Reliable Audio Player */}
-            <ReliableAudioPlayer />
+            {/* Working Audio Player */}
+            <WorkingAudioPlayer />
           </div>
 
           {/* Sidebar */}
