@@ -32,37 +32,16 @@ export const useAudioPlayer = () => {
     
     const surahNumber = currentSurah.toString().padStart(3, '0');
     
-    // Используем несколько источников для надежности
-    const audioUrls: { [key: string]: string[] } = {
-      abdul_basit: [
-        `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`,
-        `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`,
-        `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`
-      ],
-      mishary_rashid: [
-        `https://cdn.islamic.network/quran/audio-surah/128/ar.misharyrashaad/${surahNumber}.mp3`,
-        `https://everyayah.com/data/Mishary_Rashid_Alafasy_192kbps/${surahNumber}.mp3`,
-        `https://server8.mp3quran.net/mishary_rashid/${surahNumber}.mp3`
-      ],
-      saad_al_ghamdi: [
-        `https://cdn.islamic.network/quran/audio-surah/128/ar.saadalghamdi/${surahNumber}.mp3`,
-        `https://everyayah.com/data/Saad_Al_Ghamdi_192kbps/${surahNumber}.mp3`,
-        `https://server8.mp3quran.net/saad_ghamdi/${surahNumber}.mp3`
-      ],
-      maher_al_muaiqly: [
-        `https://cdn.islamic.network/quran/audio-surah/128/ar.mahermuaiqly/${surahNumber}.mp3`,
-        `https://everyayah.com/data/Maher_Al_Muaiqly_192kbps/${surahNumber}.mp3`,
-        `https://server8.mp3quran.net/maher_muaiqly/${surahNumber}.mp3`
-      ],
-      sudais_shuraim: [
-        `https://cdn.islamic.network/quran/audio-surah/128/ar.sudais/${surahNumber}.mp3`,
-        `https://everyayah.com/data/Sudais_Shuraim_192kbps/${surahNumber}.mp3`,
-        `https://server8.mp3quran.net/sudais/${surahNumber}.mp3`
-      ]
+    // Простые и надежные URL
+    const audioUrls: { [key: string]: string } = {
+      abdul_basit: `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`,
+      mishary_rashid: `https://server8.mp3quran.net/mishary_rashid/${surahNumber}.mp3`,
+      saad_al_ghamdi: `https://server8.mp3quran.net/saad_ghamdi/${surahNumber}.mp3`,
+      maher_al_muaiqly: `https://server8.mp3quran.net/maher_muaiqly/${surahNumber}.mp3`,
+      sudais_shuraim: `https://server8.mp3quran.net/sudais/${surahNumber}.mp3`
     };
     
-    // Возвращаем первый URL (основной источник)
-    return audioUrls[currentReciter.id]?.[0] || '';
+    return audioUrls[currentReciter.id] || '';
   }, [currentReciter, currentSurah]);
 
   // Find current word based on audio time

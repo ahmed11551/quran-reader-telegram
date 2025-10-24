@@ -4,11 +4,12 @@ import { QuranText } from './components/QuranText';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
-import { JuzNavigator } from './components/JuzNavigator';
+import { TestAudioPlayer } from './components/TestAudioPlayer';
+import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
 import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useTelegramWebApp } from './hooks/useTelegramWebApp';
-import { allSurahs, realReciters } from './data/quranData';
+import { allSurahs, realReciters } from './data/completeQuranData';
 
 function App() {
   const { 
@@ -92,11 +93,11 @@ function App() {
             </div>
           </div>
           
+          {/* Surah List */}
+          <SurahList />
+
           {/* Surah Navigator */}
           <SurahNavigator />
-
-          {/* Juz Navigator */}
-          <JuzNavigator />
 
           {/* Quran Text */}
           <div className="bg-white rounded-lg shadow-lg p-6">
@@ -106,6 +107,9 @@ function App() {
               onWordClick={handleWordClick}
             />
           </div>
+
+          {/* Test Audio Player */}
+          <TestAudioPlayer />
 
           {/* Audio Player */}
           <AudioPlayer />
