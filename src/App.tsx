@@ -15,7 +15,6 @@ function App() {
     currentAyah, 
     setSurahs, 
     setReciters,
-    isLoading,
     error 
   } = useAppStore();
 
@@ -24,8 +23,15 @@ function App() {
 
   // Load initial data
   useEffect(() => {
-    loadInitialData();
-  }, []);
+    console.log('Loading initial data...');
+    try {
+      setSurahs(sampleSurahs);
+      setReciters(sampleReciters);
+      console.log('Data loaded successfully');
+    } catch (err) {
+      console.error('Error loading data:', err);
+    }
+  }, [setSurahs, setReciters]);
 
   // Handle word click with haptic feedback
   const handleWordClick = (word: any) => {
@@ -33,34 +39,14 @@ function App() {
     seekToWord(word);
   };
 
-  const loadInitialData = async () => {
-    try {
-      // Load sample data - in real app, this would come from API
-      setSurahs(sampleSurahs);
-      setReciters(sampleReciters);
-    } catch (err) {
-      console.error('Error loading data:', err);
-    }
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Загрузка...</p>
-        </div>
-      </div>
-    );
-  }
-
+  // Показываем ошибку если есть
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <p className="text-red-600 mb-4">{error}</p>
           <button 
-            onClick={loadInitialData}
+            onClick={() => window.location.reload()}
             className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
           >
             Попробовать снова
