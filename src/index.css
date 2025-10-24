@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Scheherazade+New:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+  
+  body {
+    @apply bg-gray-50 text-gray-900;
+  }
+}
+
+@layer components {
+  .quran-text {
+    font-family: 'Scheherazade New', serif;
+    font-size: 1.5rem;
+    line-height: 2.5;
+    direction: rtl;
+    text-align: right;
+  }
+  
+  .arabic-text {
+    font-family: 'Amiri', serif;
+    direction: rtl;
+    text-align: right;
+  }
+  
+  .word-highlight {
+    @apply bg-yellow-200 rounded px-1 transition-all duration-200;
+  }
+  
+  .word-current {
+    @apply bg-yellow-400 text-gray-900 font-semibold;
+  }
+  
+  .ayah-number {
+    @apply inline-block bg-primary-100 text-primary-800 rounded-full w-8 h-8 text-center text-sm font-medium mx-2;
+  }
+  
+  /* Custom slider styles */
+  .slider {
+    -webkit-appearance: none;
+    appearance: none;
+    background: transparent;
+    cursor: pointer;
+  }
+  
+  .slider::-webkit-slider-track {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    background: #0ea5e9;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-track {
+    background: #e5e7eb;
+    height: 8px;
+    border-radius: 4px;
+    border: none;
+  }
+  
+  .slider::-moz-range-thumb {
+    background: #0ea5e9;
+    height: 20px;
+    width: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: none;
+  }
+}
