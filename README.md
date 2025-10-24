@@ -1,6 +1,14 @@
 # Читалка Корана - Telegram Mini App
 
+[![GitHub stars](https://img.shields.io/github/stars/YOUR_USERNAME/quran-reader-telegram?style=social)](https://github.com/YOUR_USERNAME/quran-reader-telegram)
+[![GitHub forks](https://img.shields.io/github/forks/YOUR_USERNAME/quran-reader-telegram?style=social)](https://github.com/YOUR_USERNAME/quran-reader-telegram)
+[![GitHub issues](https://img.shields.io/github/issues/YOUR_USERNAME/quran-reader-telegram)](https://github.com/YOUR_USERNAME/quran-reader-telegram/issues)
+[![GitHub license](https://img.shields.io/github/license/YOUR_USERNAME/quran-reader-telegram)](https://github.com/YOUR_USERNAME/quran-reader-telegram/blob/main/LICENSE)
+[![Build Status](https://github.com/YOUR_USERNAME/quran-reader-telegram/workflows/Build%20and%20Test/badge.svg)](https://github.com/YOUR_USERNAME/quran-reader-telegram/actions)
+
 Полнофункциональная читалка Корана с синхронизацией аудио и текста для Telegram Mini App на React.
+
+🌐 **[Демо версия](https://YOUR_USERNAME.github.io/quran-reader-telegram)** | 📱 **[Telegram Bot](https://t.me/YOUR_BOT_USERNAME)**
 
 ## Особенности
 
@@ -22,28 +30,46 @@
 - **Lucide React** для иконок
 - **Vite** для сборки
 
-## Установка
+## 🚀 Быстрый старт
 
-1. Клонируйте репозиторий:
+### Предварительные требования
+- Node.js 18+ 
+- npm или yarn
+- Telegram Bot Token
+
+### Установка
+
+1. **Клонируйте репозиторий:**
 ```bash
-git clone <repository-url>
+git clone https://github.com/YOUR_USERNAME/quran-reader-telegram.git
 cd quran-reader-telegram
 ```
 
-2. Установите зависимости:
+2. **Установите зависимости:**
 ```bash
 npm install
 ```
 
-3. Запустите проект в режиме разработки:
+3. **Запустите проект в режиме разработки:**
 ```bash
 npm run dev
 ```
 
-4. Соберите для продакшена:
+4. **Откройте браузер:**
+Перейдите по адресу `http://localhost:3000`
+
+5. **Соберите для продакшена:**
 ```bash
 npm run build
 ```
+
+### 📱 Настройка Telegram Bot
+
+1. Создайте бота через [@BotFather](https://t.me/BotFather)
+2. Установите команду `/setmenubutton`
+3. Укажите URL вашего развернутого приложения
+
+Подробные инструкции в [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## Структура проекта
 
@@ -135,10 +161,41 @@ npm run build
    - Установите команду `/setmenubutton`
    - Укажите URL вашего приложения
 
-## Лицензия
+## 📚 Документация
 
-MIT License
+- **[USER_GUIDE.md](USER_GUIDE.md)** - Подробное руководство пользователя
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Инструкции по развертыванию
+- **[PROJECT_INFO.md](PROJECT_INFO.md)** - Информация о проекте
+- **[GITHUB_SETUP.md](GITHUB_SETUP.md)** - Настройка GitHub репозитория
 
-## Вклад в проект
+## 🤝 Вклад в проект
 
-Приветствуются любые вклады в развитие проекта. Пожалуйста, создавайте issues и pull requests для улучшения функциональности.
+Приветствуются любые вклады в развитие проекта! 
+
+### Как помочь:
+1. **Сообщите об ошибках** - создайте [issue](https://github.com/YOUR_USERNAME/quran-reader-telegram/issues)
+2. **Предложите улучшения** - создайте [pull request](https://github.com/YOUR_USERNAME/quran-reader-telegram/pulls)
+3. **Добавьте переводы** - помогите с локализацией
+4. **Улучшите дизайн** - предложите UI/UX изменения
+
+### Стандарты кода:
+- Используйте TypeScript
+- Следуйте ESLint правилам
+- Пишите тесты для новой функциональности
+- Документируйте изменения
+
+## 📄 Лицензия
+
+MIT License - см. файл [LICENSE](LICENSE) для подробностей.
+
+## 🙏 Благодарности
+
+- **Quran.com** - за API и данные
+- **Islamic Network** - за аудио файлы
+- **Telegram** - за платформу Mini Apps
+- **React Team** - за отличную библиотеку
+- **Tailwind CSS** - за стили
+
+---
+
+**⭐ Поставьте звезду, если проект вам понравился!**
