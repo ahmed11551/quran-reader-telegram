@@ -1,8 +1,7 @@
 import { useEffect } from 'react';
-import { FunctionalQuickActions } from './components/FunctionalQuickActions';
-import { AdvancedAudioPlayer } from './components/AdvancedAudioPlayer';
-import { ModernHeader, ModernStatsCard } from './components/ModernUI';
-import { BeautifulQuranText } from './components/BeautifulQuranText';
+import { ResponsiveHeader, ResponsiveQuickActions, ResponsiveStatsCard } from './components/ResponsiveUI';
+import { ResponsiveQuranText } from './components/ResponsiveQuranText';
+import { ReliableAudioPlayer } from './components/ReliableAudioPlayer';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
@@ -50,34 +49,34 @@ function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
-      {/* Modern Header */}
-      <ModernHeader />
+      {/* Responsive Header */}
+      <ResponsiveHeader />
       
-      <div className="container mx-auto px-4 py-6 max-w-4xl">
-        {/* Quick Actions */}
-        <FunctionalQuickActions />
+      <div className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-6xl">
+        {/* Responsive Quick Actions */}
+        <ResponsiveQuickActions />
         
-        {/* Stats Card */}
-        <ModernStatsCard />
+        {/* Responsive Stats Card */}
+        <ResponsiveStatsCard />
         
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 md:gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="xl:col-span-3 space-y-4 md:space-y-6">
             {/* Surah List */}
             <SurahList />
 
             {/* Surah Navigator */}
             <SurahNavigator />
 
-            {/* Beautiful Quran Text */}
-            <BeautifulQuranText />
+            {/* Responsive Quran Text */}
+            <ResponsiveQuranText />
 
-            {/* Advanced Audio Player */}
-            <AdvancedAudioPlayer />
+            {/* Reliable Audio Player */}
+            <ReliableAudioPlayer />
           </div>
 
           {/* Sidebar */}
-          <div className="space-y-6">
+          <div className="space-y-4 md:space-y-6">
             {/* Settings Panel */}
             <SettingsPanel />
             

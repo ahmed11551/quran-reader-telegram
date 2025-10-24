@@ -80,4 +80,75 @@
     cursor: pointer;
     border: none;
   }
+  
+  /* Responsive text scaling */
+  @media (max-width: 640px) {
+    .text-responsive {
+      font-size: 0.875rem;
+      line-height: 1.25rem;
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 768px) {
+    .text-responsive {
+      font-size: 1rem;
+      line-height: 1.5rem;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .text-responsive {
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+    }
+  }
+
+  /* Touch-friendly buttons */
+  @media (max-width: 768px) {
+    .touch-target {
+      min-height: 44px;
+      min-width: 44px;
+    }
+  }
+
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+
+  /* Focus styles for accessibility */
+  button:focus,
+  input:focus,
+  select:focus {
+    outline: 2px solid #3b82f6;
+    outline-offset: 2px;
+  }
+
+  /* Animation improvements */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
 }
