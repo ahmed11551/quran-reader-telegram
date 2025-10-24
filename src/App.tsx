@@ -11,7 +11,7 @@ import { QuranSearch } from './components/QuranSearch';
 import { BookmarksAndNotes } from './components/BookmarksAndNotes';
 import { FontAndThemeSettings } from './components/FontAndThemeSettings';
 import { ShareAyah } from './components/ShareAyah';
-import { LocalAudioPlayer } from './components/LocalAudioPlayer';
+import { RealAudioPlayer } from './components/RealAudioPlayer';
 import { useAppStore } from './store/appStore';
 import { fullQuranData, fullReciters } from './data/fullQuranDatabase';
 
@@ -74,8 +74,8 @@ function App() {
             {/* Full Quran Text */}
             <FullQuranText />
 
-            {/* Local Audio Player */}
-            <LocalAudioPlayer />
+            {/* Real Audio Player */}
+            <RealAudioPlayer />
           </div>
 
           {/* Sidebar */}

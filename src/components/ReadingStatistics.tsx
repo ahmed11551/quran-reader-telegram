@@ -9,21 +9,16 @@ export const ReadingStatistics: React.FC = () => {
     favorites
   } = useProgressStore();
 
-  const streakDays = 7; // Mock data
-  const totalReadingTime = 120; // Mock data
-
-  // Статистика по сурам
-  const completedSurahs = 3; // Mock data
+  // Реальная статистика (пока пустая, будет заполняться по мере использования)
+  const completedSurahs = 0;
   const totalSurahs = fullQuranData.length;
   const completionPercentage = Math.round((completedSurahs / totalSurahs) * 100);
 
-  // Статистика по аятам
-  const totalCompletedAyahs = 25; // Mock data
+  const totalCompletedAyahs = 0;
   const totalAyahs = fullQuranData.reduce((sum, surah) => sum + surah.totalAyahs, 0);
   const ayahCompletionPercentage = Math.round((totalCompletedAyahs / totalAyahs) * 100);
 
-  // Статистика по джузам
-  const completedJuzs = 1; // Mock data
+  const completedJuzs = 0;
 
   const stats = [
     {
@@ -52,19 +47,19 @@ export const ReadingStatistics: React.FC = () => {
     },
     {
       title: 'Серия дней',
-      value: `${streakDays}`,
+      value: '0',
       description: 'дней подряд',
       icon: TrendingUp,
       color: 'orange',
-      progress: Math.min(streakDays * 10, 100)
+      progress: 0
     },
     {
       title: 'Время чтения',
-      value: `${totalReadingTime}`,
+      value: '0',
       description: 'минут всего',
       icon: Clock,
       color: 'red',
-      progress: Math.min(totalReadingTime * 2, 100)
+      progress: 0
     },
     {
       title: 'Избранное',
@@ -164,23 +159,12 @@ export const ReadingStatistics: React.FC = () => {
       {/* Recent Activity */}
       <div className="mt-6 p-4 bg-gray-50 rounded-xl">
         <h4 className="font-semibold text-gray-900 mb-3">Последняя активность</h4>
-        <div className="space-y-2">
-          {fullQuranData.slice(0, 3).map((surah) => {
-            const completionPercentage = Math.round((Math.random() * 100)); // Mock data
-            
-            return (
-              <div key={surah.id} className="flex items-center justify-between p-2 bg-white rounded-lg">
-                <div className="flex-1">
-                  <div className="font-medium text-gray-900">{surah.nameArabic}</div>
-                  <div className="text-sm text-gray-600">{surah.name}</div>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-semibold text-gray-900">{completionPercentage}%</div>
-                  <div className="text-xs text-gray-500">{Math.floor(surah.totalAyahs * completionPercentage / 100)}/{surah.totalAyahs}</div>
-                </div>
-              </div>
-            );
-          })}
+        <div className="text-center py-8">
+          <BookOpen className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+          <p className="text-gray-500">Начните чтение Корана</p>
+          <p className="text-sm text-gray-400 mt-1">
+            Ваша активность будет отображаться здесь
+          </p>
         </div>
       </div>
 

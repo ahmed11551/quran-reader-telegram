@@ -1,8 +1,8 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward } from 'lucide-react';
+import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, RefreshCw } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 
-export const SimpleAudioPlayer: React.FC = () => {
+export const RealAudioPlayer: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
@@ -10,25 +10,43 @@ export const SimpleAudioPlayer: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [volume, setVolume] = useState(0.8);
+  const [currentSourceIndex, setCurrentSourceIndex] = useState(0);
 
   const { currentSurah, currentAyah, settings, updateSettings, setCurrentSurah, setCurrentAyah } = useAppStore();
 
-  // Простые и надежные аудио источники
-  const getAudioUrl = () => {
-    const surahNumber = currentSurah.toString().padStart(3, '0');
+  // Реальные рабочие источники аудио
+  const getAudioSources = () => {
+    const surahNum = currentSurah.toString().padStart(3, '0');
     
-    // Используем самые простые и надежные источники
-    const sources = [
-      // Локальные файлы (если есть)
-      `/audio/surah_${surahNumber}.mp3`,
-      // Публичные CDN
-      `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`,
-      `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`,
+    return [
+      // Основные источники
+      `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNum}.mp3`,
+      `https://server8.mp3quran.net/abd_basit/${surahNum}.mp3`,
+      `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNum}.mp3`,
+      `https://verses.quran.com/Abdul_Basit_Murattal/mp3/${surahNum}.mp3`,
       // Альтернативные источники
-      `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`
+      `https://quran.com/audio/Abdul_Basit_Murattal/${surahNum}.mp3`,
+      `https://audio.quran.com/Abdul_Basit_Murattal/${surahNum}.mp3`
     ];
-    
-    return sources[0]; // Начинаем с локального файла
+  };
+
+  const currentAudioUrl = getAudioSources()[currentSourceIndex];
+
+  // Переключение на следующий источник при ошибке
+  const tryNextSource = () => {
+    const sources = getAudioSources();
+    if (currentSourceIndex < sources.length - 1) {
+      setCurrentSourceIndex(prev => prev + 1);
+      setError(null);
+      setIsLoading(true);
+      if (audioRef.current) {
+        audioRef.current.load();
+      }
+    } else {
+      setError('Все источники аудио недоступны. Проверьте интернет-соединение.');
+      setIsLoading(false);
+      setIsPlaying(false);
+    }
   };
 
   // Воспроизведение/пауза
@@ -43,11 +61,8 @@ export const SimpleAudioPlayer: React.FC = () => {
         setIsLoading(true);
         setError(null);
         
-        const audioUrl = getAudioUrl();
-        
-        // Если URL изменился, обновляем src
-        if (audioRef.current.src !== audioUrl) {
-          audioRef.current.src = audioUrl;
+        if (audioRef.current.src !== currentAudioUrl) {
+          audioRef.current.src = currentAudioUrl;
         }
         
         await audioRef.current.play();
@@ -56,9 +71,10 @@ export const SimpleAudioPlayer: React.FC = () => {
       }
     } catch (err) {
       console.error('Audio error:', err);
-      setError('Ошибка воспроизведения. Проверьте интернет-соединение.');
+      setError('Ошибка воспроизведения. Переключение на другой источник...');
       setIsLoading(false);
       setIsPlaying(false);
+      tryNextSource();
     }
   };
 
@@ -100,7 +116,7 @@ export const SimpleAudioPlayer: React.FC = () => {
   const goToNextAyah = () => {
     if (currentSurah === 1 && currentAyah < 7) {
       setCurrentAyah(currentAyah + 1);
-    } else if (currentSurah < 3) {
+    } else if (currentSurah < 114) {
       setCurrentSurah(currentSurah + 1);
       setCurrentAyah(1);
     }
@@ -127,8 +143,10 @@ export const SimpleAudioPlayer: React.FC = () => {
     };
     const handleError = (e: any) => {
       console.error('Audio error:', e);
-      setError('Ошибка загрузки аудио. Файл недоступен.');
+      setError('Ошибка загрузки аудио. Переключение на другой источник...');
       setIsLoading(false);
+      setIsPlaying(false);
+      tryNextSource();
     };
     const handleEnded = () => {
       setIsPlaying(false);
@@ -156,9 +174,21 @@ export const SimpleAudioPlayer: React.FC = () => {
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
     };
-  }, []);
+  }, [currentSourceIndex]);
+
+  // Обновляем источник при смене суры
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.src = currentAudioUrl;
+      audioRef.current.load();
+      setIsLoading(true);
+      setError(null);
+      setCurrentSourceIndex(0); // Сброс на первый источник
+    }
+  }, [currentSurah, currentAyah]);
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+  const sources = getAudioSources();
 
   return (
     <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
@@ -175,6 +205,9 @@ export const SimpleAudioPlayer: React.FC = () => {
             <div className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
             <span className="text-xs text-gray-600">
               {isPlaying ? 'Воспроизводится' : 'Готов к воспроизведению'}
+            </span>
+            <span className="text-xs text-blue-600 font-medium">
+              • Источник {currentSourceIndex + 1}/{sources.length}
             </span>
           </div>
         </div>
@@ -208,15 +241,26 @@ export const SimpleAudioPlayer: React.FC = () => {
               <p className="text-red-800 font-medium">Ошибка воспроизведения</p>
               <p className="text-red-600 text-sm">{error}</p>
             </div>
-            <button
-              onClick={() => {
-                setError(null);
-                setIsLoading(false);
-              }}
-              className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors font-medium"
-            >
-              Закрыть
-            </button>
+            <div className="flex space-x-2">
+              <button
+                onClick={() => {
+                  setError(null);
+                  setIsLoading(false);
+                }}
+                className="px-3 py-1 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors font-medium"
+              >
+                Закрыть
+              </button>
+              {currentSourceIndex < sources.length - 1 && (
+                <button
+                  onClick={tryNextSource}
+                  className="px-3 py-1 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors font-medium flex items-center space-x-1"
+                >
+                  <RefreshCw className="w-3 h-3" />
+                  <span>Другой источник</span>
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -295,20 +339,14 @@ export const SimpleAudioPlayer: React.FC = () => {
         </div>
       </div>
 
-      {/* Test Audio Button */}
+      {/* Source Info */}
       <div className="text-center">
-        <button
-          onClick={() => {
-            // Тестовый аудио файл
-            if (audioRef.current) {
-              audioRef.current.src = 'https://www.soundjay.com/misc/sounds/bell-ringing-05.wav';
-              audioRef.current.play();
-            }
-          }}
-          className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors text-sm font-medium"
-        >
-          Тест аудио
-        </button>
+        <div className="text-xs text-gray-500 mb-2">
+          Текущий источник: {sources[currentSourceIndex].split('/')[2]}
+        </div>
+        <div className="text-xs text-gray-400">
+          Автоматическое переключение при ошибках
+        </div>
       </div>
 
       <audio
