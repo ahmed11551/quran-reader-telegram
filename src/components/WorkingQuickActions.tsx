@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { BookOpen, BarChart3, Star, Dice6, Clock, Share2, X, HeartOff } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
 import { useProgressStore } from '../store/progressStore';
-import { localSurahs } from '../data/localQuranData';
+import { fullQuranData } from '../data/fullQuranDatabase';
 
 export const WorkingQuickActions: React.FC = () => {
   const [activeModal, setActiveModal] = useState<string | null>(null);
@@ -132,7 +132,7 @@ const SurahsModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {localSurahs.map((surah) => {
+          {fullQuranData.map((surah) => {
             const progress = getProgressForSurah(surah.id);
             const completionPercentage = progress 
               ? Math.round((progress.completedAyahs.length / surah.totalAyahs) * 100)
@@ -282,7 +282,7 @@ const FavoritesModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         ) : (
           <div className="space-y-3">
             {favorites.map((favorite) => {
-              const surah = localSurahs.find(s => s.id === favorite.surahId);
+              const surah = fullQuranData.find(s => s.id === favorite.surahId);
               const ayah = surah?.ayahs.find(a => a.number === favorite.ayahId);
               
               return (
@@ -388,7 +388,7 @@ const PrayerTimesModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
 // Share Modal
 const ShareModal: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const { currentSurah, currentAyah } = useAppStore();
-  const surah = localSurahs.find(s => s.id === currentSurah);
+  const surah = fullQuranData.find(s => s.id === currentSurah);
   const ayah = surah?.ayahs.find(a => a.number === currentAyah);
 
   const shareText = `Читаю "${surah?.nameArabic}" - Аят ${currentAyah}: ${ayah?.text}`;

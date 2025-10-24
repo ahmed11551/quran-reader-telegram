@@ -2,14 +2,14 @@ import { useEffect } from 'react';
 import { ResponsiveHeader } from './components/ResponsiveUI';
 import { WorkingQuickActions } from './components/WorkingQuickActions';
 import { RealStatsCard } from './components/RealStatsCard';
-import { ResponsiveQuranText } from './components/ResponsiveQuranText';
+import { FullQuranText } from './components/FullQuranText';
 import { WorkingAudioPlayer } from './components/WorkingAudioPlayer';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
 import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
-import { completeQuranData, completeReciters } from './data/completeQuranDatabase';
+import { fullQuranData, fullReciters } from './data/fullQuranDatabase';
 
 function App() {
   const { 
@@ -22,11 +22,11 @@ function App() {
 
         // Load initial data
         useEffect(() => {
-          console.log('Loading complete Quran database...');
+          console.log('Loading full Quran database...');
           try {
-            setSurahs(completeQuranData);
-            setReciters(completeReciters);
-            console.log('Complete Quran database loaded successfully');
+            setSurahs(fullQuranData);
+            setReciters(fullReciters);
+            console.log('Full Quran database loaded successfully');
           } catch (err) {
             console.error('Error loading Quran data:', err);
           }
@@ -70,8 +70,8 @@ function App() {
             {/* Surah Navigator */}
             <SurahNavigator />
 
-            {/* Responsive Quran Text */}
-            <ResponsiveQuranText />
+            {/* Full Quran Text */}
+            <FullQuranText />
 
             {/* Working Audio Player */}
             <WorkingAudioPlayer />
