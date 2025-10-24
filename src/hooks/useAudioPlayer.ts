@@ -30,16 +30,40 @@ export const useAudioPlayer = () => {
   const getAudioUrl = useCallback(() => {
     if (!currentReciter || !currentSurahData) return '';
     
-    const speedKey = settings.playbackSpeed <= 0.8 ? 'slow' : 
-                    settings.playbackSpeed >= 1.2 ? 'fast' : 'normal';
-    
-    const baseUrl = currentReciter.audioUrls[speedKey];
-    if (!baseUrl) return '';
-    
-    // Заменяем {surah} на номер суры с ведущими нулями
     const surahNumber = currentSurah.toString().padStart(3, '0');
-    return baseUrl.replace('{surah}', surahNumber);
-  }, [currentReciter, currentSurah, settings.playbackSpeed]);
+    
+    // Используем несколько источников для надежности
+    const audioUrls: { [key: string]: string[] } = {
+      abdul_basit: [
+        `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`,
+        `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`,
+        `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`
+      ],
+      mishary_rashid: [
+        `https://cdn.islamic.network/quran/audio-surah/128/ar.misharyrashaad/${surahNumber}.mp3`,
+        `https://everyayah.com/data/Mishary_Rashid_Alafasy_192kbps/${surahNumber}.mp3`,
+        `https://server8.mp3quran.net/mishary_rashid/${surahNumber}.mp3`
+      ],
+      saad_al_ghamdi: [
+        `https://cdn.islamic.network/quran/audio-surah/128/ar.saadalghamdi/${surahNumber}.mp3`,
+        `https://everyayah.com/data/Saad_Al_Ghamdi_192kbps/${surahNumber}.mp3`,
+        `https://server8.mp3quran.net/saad_ghamdi/${surahNumber}.mp3`
+      ],
+      maher_al_muaiqly: [
+        `https://cdn.islamic.network/quran/audio-surah/128/ar.mahermuaiqly/${surahNumber}.mp3`,
+        `https://everyayah.com/data/Maher_Al_Muaiqly_192kbps/${surahNumber}.mp3`,
+        `https://server8.mp3quran.net/maher_muaiqly/${surahNumber}.mp3`
+      ],
+      sudais_shuraim: [
+        `https://cdn.islamic.network/quran/audio-surah/128/ar.sudais/${surahNumber}.mp3`,
+        `https://everyayah.com/data/Sudais_Shuraim_192kbps/${surahNumber}.mp3`,
+        `https://server8.mp3quran.net/sudais/${surahNumber}.mp3`
+      ]
+    };
+    
+    // Возвращаем первый URL (основной источник)
+    return audioUrls[currentReciter.id]?.[0] || '';
+  }, [currentReciter, currentSurah]);
 
   // Find current word based on audio time
   const findCurrentWord = useCallback((time: number): number => {
@@ -85,10 +109,21 @@ export const useAudioPlayer = () => {
       setIsBuffering(false);
     };
 
-    const handleError = () => {
+    const handleError = (e: Event) => {
+      console.error('Audio error:', e);
       setError('Ошибка загрузки аудио');
       setIsLoading(false);
       setIsBuffering(false);
+      
+      // Попробуем альтернативный URL
+      const currentUrl = audio.src;
+      if (currentUrl.includes('cdn.islamic.network')) {
+        // Переключаемся на альтернативный источник
+        const alternativeUrl = currentUrl.replace('cdn.islamic.network', 'everyayah.com');
+        console.log('Trying alternative URL:', alternativeUrl);
+        audio.src = alternativeUrl;
+        audio.load();
+      }
     };
 
     const handleEnded = () => {

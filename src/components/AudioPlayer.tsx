@@ -21,11 +21,54 @@ export const AudioPlayer: React.FC = () => {
     updateSettings,
     currentSurah,
     currentAyah,
-    surahs 
+    surahs,
+    error,
+    setError,
+    reciters
   } = useAppStore();
 
   const currentSurahData = surahs.find(s => s.number === currentSurah);
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
+
+  // Показываем ошибку если есть
+  if (error) {
+    return (
+      <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+        <div className="flex items-center space-x-3">
+          <Volume2 className="w-5 h-5 text-red-600" />
+          <div className="flex-1">
+            <p className="text-red-800 font-medium">Ошибка воспроизведения</p>
+            <p className="text-red-600 text-sm">{error}</p>
+            <div className="mt-3 space-x-2">
+              <button
+                onClick={() => {
+                  setError(null);
+                  if (audioRef.current) {
+                    audioRef.current.load();
+                  }
+                }}
+                className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 transition-colors"
+              >
+                Попробовать снова
+              </button>
+              <button
+                onClick={() => {
+                  // Переключиться на другой чтец
+                  const currentReciterIndex = reciters.findIndex(r => r.id === settings.selectedReciter);
+                  const nextReciter = reciters[(currentReciterIndex + 1) % reciters.length];
+                  updateSettings({ selectedReciter: nextReciter.id });
+                  setError(null);
+                }}
+                className="px-3 py-1 bg-gray-600 text-white text-sm rounded hover:bg-gray-700 transition-colors"
+              >
+                Другой чтец
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const formatTime = (time: number) => {
     const minutes = Math.floor(time / 60);
