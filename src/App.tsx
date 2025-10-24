@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { SimpleAudioPlayer } from './components/SimpleAudioPlayer';
-import { SimpleQuranText } from './components/SimpleQuranText';
+import { IslamGlobalQuranText } from './components/IslamGlobalQuranText';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
@@ -8,7 +8,7 @@ import { TestAudioPlayer } from './components/TestAudioPlayer';
 import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
 import { useTelegramWebApp } from './hooks/useTelegramWebApp';
-import { allSurahs, realReciters } from './data/completeQuranData';
+import { islamGlobalSurahs, reliableReciters } from './data/islamGlobalData';
 
 function App() {
   const { 
@@ -21,11 +21,11 @@ function App() {
 
   // Load initial data
   useEffect(() => {
-    console.log('Loading Quran data...');
+    console.log('Loading Quran data from islam.global...');
     try {
-      setSurahs(allSurahs);
-      setReciters(realReciters);
-      console.log('Quran data loaded successfully');
+      setSurahs(islamGlobalSurahs);
+      setReciters(reliableReciters);
+      console.log('Quran data loaded successfully from islam.global');
     } catch (err) {
       console.error('Error loading Quran data:', err);
     }
@@ -90,7 +90,7 @@ function App() {
           <SurahNavigator />
 
           {/* Quran Text */}
-          <SimpleQuranText />
+          <IslamGlobalQuranText />
 
           {/* Test Audio Player */}
           <TestAudioPlayer />
