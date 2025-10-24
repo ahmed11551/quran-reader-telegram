@@ -1,6 +1,7 @@
-import React, { useRef, useState, useEffect, useCallback } from 'react';
-import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward } from 'lucide-react';
+import React, { useRef, useState, useEffect } from 'react';
+import { Play, Pause, Volume2, VolumeX, SkipBack, SkipForward, Heart, HeartOff } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
+import { useProgressStore } from '../store/progressStore';
 
 export const SimpleReliableAudioPlayer: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -9,65 +10,45 @@ export const SimpleReliableAudioPlayer: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [volume, setVolume] = useState(1);
-  const [currentSourceIndex, setCurrentSourceIndex] = useState(0);
+  const [volume, setVolume] = useState(0.8);
 
   const { 
     currentSurah, 
     currentAyah,
     settings, 
     updateSettings,
-    reciters
+    reciters,
+    setCurrentSurah,
+    setCurrentAyah
   } = useAppStore();
+
+  const { 
+    markAyahAsRead, 
+    addToFavorites, 
+    removeFromFavorites, 
+    favorites 
+  } = useProgressStore();
 
   const currentReciter = reciters.find(r => r.id === settings.selectedReciter);
 
-  // Получение всех источников аудио для текущего чтеца
-  const getAudioSources = useCallback(() => {
+  // Проверяем, добавлен ли текущий аят в избранное
+  const isFavorite = favorites.some(
+    fav => fav.surahId === currentSurah && fav.ayahId === currentAyah
+  );
+
+  // Простые и надежные URL для аудио
+  const getAudioUrl = () => {
     const surahNumber = currentSurah.toString().padStart(3, '0');
     
-    const reciterSources: { [key: string]: string[] } = {
-      abdul_basit: [
-        `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`,
-        `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`,
-        `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`,
-        `https://verses.quran.com/Abdul_Basit_Murattal/mp3/${surahNumber}.mp3`
-      ],
-      mishary_rashid: [
-        `https://server8.mp3quran.net/mishary_rashid/${surahNumber}.mp3`,
-        `https://everyayah.com/data/Mishary_Rashid_Alafasy_192kbps/${surahNumber}.mp3`,
-        `https://cdn.islamic.network/quran/audio-surah/128/ar.misharyrashaad/${surahNumber}.mp3`,
-        `https://verses.quran.com/Mishary_Rashid_Alafasy/mp3/${surahNumber}.mp3`
-      ],
-      saad_al_ghamdi: [
-        `https://server8.mp3quran.net/saad_ghamdi/${surahNumber}.mp3`,
-        `https://everyayah.com/data/Saad_Al_Ghamdi_192kbps/${surahNumber}.mp3`,
-        `https://cdn.islamic.network/quran/audio-surah/128/ar.saadalghamdi/${surahNumber}.mp3`,
-        `https://verses.quran.com/Saad_Al_Ghamdi/mp3/${surahNumber}.mp3`
-      ]
-    };
+    // Используем самые надежные источники
+    const sources = [
+      `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`,
+      `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`,
+      `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`
+    ];
     
-    return reciterSources[currentReciter?.id || 'abdul_basit'] || reciterSources.abdul_basit;
-  }, [currentSurah, currentReciter]);
-
-  // Попробовать следующий источник
-  const tryNextSource = useCallback(() => {
-    const sources = getAudioSources();
-    const nextIndex = (currentSourceIndex + 1) % sources.length;
-    
-    if (nextIndex !== currentSourceIndex) {
-      setCurrentSourceIndex(nextIndex);
-      setError(null);
-      setIsLoading(true);
-      
-      if (audioRef.current) {
-        audioRef.current.src = sources[nextIndex];
-        audioRef.current.load();
-      }
-    } else {
-      setError('Все источники аудио недоступны');
-    }
-  }, [getAudioSources, currentSourceIndex]);
+    return sources[0]; // Используем первый источник
+  };
 
   // Воспроизведение/пауза
   const togglePlayPause = async () => {
@@ -81,23 +62,24 @@ export const SimpleReliableAudioPlayer: React.FC = () => {
         setIsLoading(true);
         setError(null);
         
-        const sources = getAudioSources();
-        const currentSource = sources[currentSourceIndex];
+        const audioUrl = getAudioUrl();
         
-        if (audioRef.current.src !== currentSource) {
-          audioRef.current.src = currentSource;
+        if (audioRef.current.src !== audioUrl) {
+          audioRef.current.src = audioUrl;
         }
         
         await audioRef.current.play();
         setIsPlaying(true);
         setIsLoading(false);
+        
+        // Отмечаем аят как прочитанный
+        markAyahAsRead(currentSurah, currentAyah);
       }
     } catch (err) {
       console.error('Audio error:', err);
-      setError('Ошибка воспроизведения');
+      setError('Ошибка воспроизведения. Проверьте интернет-соединение.');
       setIsLoading(false);
       setIsPlaying(false);
-      tryNextSource();
     }
   };
 
@@ -128,13 +110,21 @@ export const SimpleReliableAudioPlayer: React.FC = () => {
 
   // Переход к предыдущему/следующему аяту
   const goToPreviousAyah = () => {
-    // Логика перехода к предыдущему аяту
-    console.log('Previous ayah');
+    if (currentAyah > 1) {
+      setCurrentAyah(currentAyah - 1);
+    } else if (currentSurah > 1) {
+      setCurrentSurah(currentSurah - 1);
+      setCurrentAyah(7); // Аль-Фатиха имеет 7 аятов
+    }
   };
 
   const goToNextAyah = () => {
-    // Логика перехода к следующему аяту
-    console.log('Next ayah');
+    if (currentSurah === 1 && currentAyah < 7) {
+      setCurrentAyah(currentAyah + 1);
+    } else if (currentSurah < 3) {
+      setCurrentSurah(currentSurah + 1);
+      setCurrentAyah(1);
+    }
   };
 
   // Форматирование времени
@@ -158,9 +148,14 @@ export const SimpleReliableAudioPlayer: React.FC = () => {
     };
     const handleError = () => {
       console.error('Audio error occurred');
-      tryNextSource();
+      setError('Ошибка загрузки аудио. Проверьте интернет-соединение.');
+      setIsLoading(false);
     };
-    const handleEnded = () => setIsPlaying(false);
+    const handleEnded = () => {
+      setIsPlaying(false);
+      // Автоматически переходим к следующему аяту
+      goToNextAyah();
+    };
     const handlePlay = () => setIsPlaying(true);
     const handlePause = () => setIsPlaying(false);
 
@@ -183,12 +178,12 @@ export const SimpleReliableAudioPlayer: React.FC = () => {
       audio.removeEventListener('play', handlePlay);
       audio.removeEventListener('pause', handlePause);
     };
-  }, [tryNextSource]);
+  }, []);
 
   const progress = duration > 0 ? (currentTime / duration) * 100 : 0;
 
   return (
-    <div className="bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-xl p-6 border border-gray-200">
+    <div className="bg-white rounded-2xl shadow-xl p-6 border border-gray-200">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex-1">
@@ -196,19 +191,19 @@ export const SimpleReliableAudioPlayer: React.FC = () => {
             🎵 Аудио проигрыватель
           </h3>
           <p className="text-sm text-gray-600">
-            {currentReciter?.name} • Сура {currentSurah} • Аят {currentAyah}
+            {currentReciter?.name || 'Абдул-Басит Абдус-Самад'} • Сура {currentSurah} • Аят {currentAyah}
           </p>
           <div className="flex items-center space-x-2 mt-2">
             <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
             <span className="text-xs text-green-600 font-medium">
-              Источник {currentSourceIndex + 1} из {getAudioSources().length}
+              Готов к воспроизведению
             </span>
           </div>
         </div>
         
         {/* Speed Controls */}
         <div className="flex items-center space-x-2">
-          {[0.5, 0.75, 1.0, 1.25, 1.5].map((speed) => (
+          {[0.5, 1.0, 1.5].map((speed) => (
             <button
               key={speed}
               onClick={() => handleSpeedChange(speed)}
@@ -236,10 +231,13 @@ export const SimpleReliableAudioPlayer: React.FC = () => {
               <p className="text-red-600 text-sm">{error}</p>
             </div>
             <button
-              onClick={tryNextSource}
+              onClick={() => {
+                setError(null);
+                setIsLoading(false);
+              }}
               className="px-4 py-2 bg-red-600 text-white text-sm rounded-lg hover:bg-red-700 transition-colors font-medium"
             >
-              Попробовать другой источник
+              Закрыть
             </button>
           </div>
         </div>
@@ -319,12 +317,36 @@ export const SimpleReliableAudioPlayer: React.FC = () => {
         </div>
       </div>
 
-      {/* Additional Info */}
-      <div className="bg-gray-50 rounded-xl p-4">
-        <div className="flex items-center justify-between text-sm text-gray-600">
-          <span>Источники аудио: {getAudioSources().length}</span>
-          <span>Скорость: {settings.playbackSpeed}x</span>
-          <span>Громкость: {Math.round(volume * 100)}%</span>
+      {/* Actions */}
+      <div className="flex items-center justify-between">
+        <div className="flex items-center space-x-2">
+          <button
+            onClick={() => {
+              if (isFavorite) {
+                removeFromFavorites(currentSurah, currentAyah);
+              } else {
+                addToFavorites(currentSurah, currentAyah);
+              }
+            }}
+            className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors ${
+              isFavorite
+                ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+            }`}
+          >
+            {isFavorite ? (
+              <Heart className="w-4 h-4 fill-current" />
+            ) : (
+              <HeartOff className="w-4 h-4" />
+            )}
+            <span className="text-sm font-medium">
+              {isFavorite ? 'В избранном' : 'В избранное'}
+            </span>
+          </button>
+        </div>
+
+        <div className="text-sm text-gray-500">
+          Скорость: {settings.playbackSpeed}x • Громкость: {Math.round(volume * 100)}%
         </div>
       </div>
 

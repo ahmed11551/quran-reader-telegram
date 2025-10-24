@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { ResponsiveHeader } from './components/ResponsiveUI';
 import { WorkingQuickActions } from './components/WorkingQuickActions';
-import { RealStatsCard } from './components/RealStatsCard';
+import { ReadingStatistics } from './components/ReadingStatistics';
 import { FullQuranText } from './components/FullQuranText';
-import { FixedAudioPlayer } from './components/FixedAudioPlayer';
-import { SurahNavigator } from './components/SurahNavigator';
+import { SimpleReliableAudioPlayer } from './components/SimpleReliableAudioPlayer';
+import { ReciterSelector } from './components/ReciterSelector';
+import { NavigationPanel } from './components/NavigationPanel';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
-import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
 import { fullQuranData, fullReciters } from './data/fullQuranDatabase';
 
@@ -55,30 +55,30 @@ function App() {
       <ResponsiveHeader />
       
       <div className="container mx-auto px-3 md:px-4 py-4 md:py-6 max-w-6xl">
-        {/* Working Quick Actions */}
-        <WorkingQuickActions />
-        
-        {/* Real Stats Card */}
-        <RealStatsCard />
+            {/* Working Quick Actions */}
+            <WorkingQuickActions />
+            
+            {/* Reading Statistics */}
+            <ReadingStatistics />
         
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-4 md:gap-6">
           {/* Main Content */}
           <div className="xl:col-span-3 space-y-4 md:space-y-6">
-            {/* Surah List */}
-            <SurahList />
-
-            {/* Surah Navigator */}
-            <SurahNavigator />
+            {/* Navigation Panel */}
+            <NavigationPanel />
 
             {/* Full Quran Text */}
             <FullQuranText />
 
-            {/* Fixed Audio Player */}
-            <FixedAudioPlayer />
+            {/* Simple Reliable Audio Player */}
+            <SimpleReliableAudioPlayer />
           </div>
 
           {/* Sidebar */}
           <div className="space-y-4 md:space-y-6">
+            {/* Reciter Selector */}
+            <ReciterSelector />
+            
             {/* Settings Panel */}
             <SettingsPanel />
             
