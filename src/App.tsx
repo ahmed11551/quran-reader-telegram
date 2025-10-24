@@ -3,7 +3,6 @@ import { ResponsiveHeader } from './components/ResponsiveUI';
 import { WorkingQuickActions } from './components/WorkingQuickActions';
 import { ReadingStatistics } from './components/ReadingStatistics';
 import { FullQuranText } from './components/FullQuranText';
-import { SimpleReliableAudioPlayer } from './components/SimpleReliableAudioPlayer';
 import { ReciterSelector } from './components/ReciterSelector';
 import { NavigationPanel } from './components/NavigationPanel';
 import { SettingsPanel } from './components/SettingsPanel';
@@ -12,6 +11,7 @@ import { QuranSearch } from './components/QuranSearch';
 import { BookmarksAndNotes } from './components/BookmarksAndNotes';
 import { FontAndThemeSettings } from './components/FontAndThemeSettings';
 import { ShareAyah } from './components/ShareAyah';
+import { AudioDiagnostics } from './components/AudioDiagnostics';
 import { useAppStore } from './store/appStore';
 import { fullQuranData, fullReciters } from './data/fullQuranDatabase';
 
@@ -74,8 +74,8 @@ function App() {
             {/* Full Quran Text */}
             <FullQuranText />
 
-            {/* Simple Reliable Audio Player */}
-            <SimpleReliableAudioPlayer />
+            {/* Audio Diagnostics */}
+            <AudioDiagnostics />
           </div>
 
           {/* Sidebar */}
