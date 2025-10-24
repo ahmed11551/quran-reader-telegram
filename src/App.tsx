@@ -1,27 +1,23 @@
 import { useEffect } from 'react';
-import { AudioPlayer } from './components/AudioPlayer';
-import { QuranText } from './components/QuranText';
+import { SimpleAudioPlayer } from './components/SimpleAudioPlayer';
+import { SimpleQuranText } from './components/SimpleQuranText';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
 import { TestAudioPlayer } from './components/TestAudioPlayer';
 import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
-import { useAudioPlayer } from './hooks/useAudioPlayer';
 import { useTelegramWebApp } from './hooks/useTelegramWebApp';
 import { allSurahs, realReciters } from './data/completeQuranData';
 
 function App() {
   const { 
-    currentSurah, 
-    currentAyah, 
     setSurahs, 
     setReciters,
     error 
   } = useAppStore();
 
-  const { seekToWord } = useAudioPlayer();
-  const { hapticFeedback, user } = useTelegramWebApp();
+  const { user } = useTelegramWebApp();
 
   // Load initial data
   useEffect(() => {
@@ -34,12 +30,6 @@ function App() {
       console.error('Error loading Quran data:', err);
     }
   }, [setSurahs, setReciters]);
-
-  // Handle word click with haptic feedback
-  const handleWordClick = (word: any) => {
-    hapticFeedback('light');
-    seekToWord(word);
-  };
 
   // Показываем ошибку если есть
   if (error) {
@@ -100,19 +90,13 @@ function App() {
           <SurahNavigator />
 
           {/* Quran Text */}
-          <div className="bg-white rounded-lg shadow-lg p-6">
-            <QuranText 
-              surahId={currentSurah}
-              ayahId={currentAyah}
-              onWordClick={handleWordClick}
-            />
-          </div>
+          <SimpleQuranText />
 
           {/* Test Audio Player */}
           <TestAudioPlayer />
 
-          {/* Audio Player */}
-          <AudioPlayer />
+          {/* Simple Audio Player */}
+          <SimpleAudioPlayer />
         </div>
 
         {/* Settings Panel */}
