@@ -1,8 +1,7 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { Play, Pause, Volume2, RotateCcw, RotateCw } from 'lucide-react';
 import { useAppStore } from '../store/appStore';
-import { useTimingService } from '../services/timingService';
-import { TajweedTiming } from '../services/timingService';
+import { useRealTimingService, TajweedTiming } from '../services/realTimingService';
 
 export const AdvancedAudioPlayer: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -23,7 +22,7 @@ export const AdvancedAudioPlayer: React.FC = () => {
     setCurrentWord: setGlobalCurrentWord
   } = useAppStore();
 
-  const { getWordTimings, getCurrentWord } = useTimingService();
+  const { getWordTimings, getCurrentWord } = useRealTimingService();
   const currentReciter = reciters.find(r => r.id === settings.selectedReciter);
 
   // Загрузка таймкодов при смене суры или чтеца
@@ -61,15 +60,28 @@ export const AdvancedAudioPlayer: React.FC = () => {
   const getAudioUrl = useCallback(() => {
     const surahNumber = currentSurah.toString().padStart(3, '0');
     
-    const sources = [
-      `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`,
-      `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`,
-      `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`,
-      `https://verses.quran.com/Abdul_Basit_Murattal/mp3/${surahNumber}.mp3`
-    ];
+    // Используем разные источники для разных чтецов
+    const reciterSources: { [key: string]: string[] } = {
+      abdul_basit: [
+        `https://server8.mp3quran.net/abd_basit/${surahNumber}.mp3`,
+        `https://everyayah.com/data/Abdul_Basit_Murattal_192kbps/${surahNumber}.mp3`,
+        `https://cdn.islamic.network/quran/audio-surah/128/ar.abdulbasitmurattal/${surahNumber}.mp3`
+      ],
+      mishary_rashid: [
+        `https://server8.mp3quran.net/mishary_rashid/${surahNumber}.mp3`,
+        `https://everyayah.com/data/Mishary_Rashid_Alafasy_192kbps/${surahNumber}.mp3`,
+        `https://cdn.islamic.network/quran/audio-surah/128/ar.misharyrashaad/${surahNumber}.mp3`
+      ],
+      saad_al_ghamdi: [
+        `https://server8.mp3quran.net/saad_ghamdi/${surahNumber}.mp3`,
+        `https://everyayah.com/data/Saad_Al_Ghamdi_192kbps/${surahNumber}.mp3`,
+        `https://cdn.islamic.network/quran/audio-surah/128/ar.saadalghamdi/${surahNumber}.mp3`
+      ]
+    };
     
+    const sources = reciterSources[currentReciter?.id || 'abdul_basit'] || reciterSources.abdul_basit;
     return sources[0];
-  }, [currentSurah]);
+  }, [currentSurah, currentReciter]);
 
   const getAlternativeUrl = useCallback((currentUrl: string) => {
     const surahNumber = currentSurah.toString().padStart(3, '0');
@@ -218,7 +230,7 @@ export const AdvancedAudioPlayer: React.FC = () => {
           </p>
           {wordTimings.length > 0 && (
             <p className="text-xs text-green-600">
-              ✓ Таймкоды загружены ({wordTimings.length} слов)
+              ✓ Таймкоды проанализированы автоматически ({wordTimings.length} слов)
             </p>
           )}
         </div>

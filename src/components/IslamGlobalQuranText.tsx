@@ -99,15 +99,6 @@ export const IslamGlobalQuranText: React.FC = () => {
         </div>
       )}
 
-      <div className="mt-6 pt-4 border-t border-gray-200">
-        <p className="text-xs text-gray-500 text-center">
-          Перевод и толкование предоставлены сайтом 
-          <a href="https://islam.global" target="_blank" rel="noopener noreferrer" 
-             className="text-primary-600 hover:text-primary-700 ml-1">
-            islam.global
-          </a>
-        </p>
-      </div>
     </div>
   );
 };

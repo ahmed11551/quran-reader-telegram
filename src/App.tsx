@@ -1,13 +1,13 @@
 import { useEffect } from 'react';
 import { AdvancedAudioPlayer } from './components/AdvancedAudioPlayer';
-import { IslamGlobalQuranText } from './components/IslamGlobalQuranText';
+import { LocalQuranText } from './components/LocalQuranText';
 import { SurahNavigator } from './components/SurahNavigator';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ProgressTracker } from './components/ProgressTracker';
 import { SurahList } from './components/SurahList';
 import { useAppStore } from './store/appStore';
 import { useTelegramWebApp } from './hooks/useTelegramWebApp';
-import { islamGlobalSurahs, reliableReciters } from './data/islamGlobalData';
+import { localSurahs, localReciters } from './data/localQuranData';
 
 function App() {
   const { 
@@ -18,17 +18,17 @@ function App() {
 
   const { user } = useTelegramWebApp();
 
-  // Load initial data
-  useEffect(() => {
-    console.log('Loading Quran data from islam.global...');
-    try {
-      setSurahs(islamGlobalSurahs);
-      setReciters(reliableReciters);
-      console.log('Quran data loaded successfully from islam.global');
-    } catch (err) {
-      console.error('Error loading Quran data:', err);
-    }
-  }, [setSurahs, setReciters]);
+        // Load initial data
+        useEffect(() => {
+          console.log('Loading local Quran data...');
+          try {
+            setSurahs(localSurahs);
+            setReciters(localReciters);
+            console.log('Local Quran data loaded successfully');
+          } catch (err) {
+            console.error('Error loading Quran data:', err);
+          }
+        }, [setSurahs, setReciters]);
 
   // Показываем ошибку если есть
   if (error) {
@@ -89,7 +89,7 @@ function App() {
           <SurahNavigator />
 
           {/* Quran Text */}
-          <IslamGlobalQuranText />
+          <LocalQuranText />
 
           {/* Advanced Audio Player */}
           <AdvancedAudioPlayer />
