@@ -33,7 +33,12 @@ export const useAudioPlayer = () => {
     const speedKey = settings.playbackSpeed <= 0.8 ? 'slow' : 
                     settings.playbackSpeed >= 1.2 ? 'fast' : 'normal';
     
-    return currentReciter.audioUrls[speedKey]?.replace('{surah}', currentSurah.toString());
+    const baseUrl = currentReciter.audioUrls[speedKey];
+    if (!baseUrl) return '';
+    
+    // Заменяем {surah} на номер суры с ведущими нулями
+    const surahNumber = currentSurah.toString().padStart(3, '0');
+    return baseUrl.replace('{surah}', surahNumber);
   }, [currentReciter, currentSurah, settings.playbackSpeed]);
 
   // Find current word based on audio time
